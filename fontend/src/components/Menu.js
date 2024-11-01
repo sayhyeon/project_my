@@ -14,7 +14,7 @@ function Menu(props) {
   }, [props, slide]);
 
   useEffect(() => {
-    console.log(location.search.substring(1).split("&")[0])
+    // console.log(location.search.substring(1).split("&")[0])
 
     const selectmenu = document.getElementById(location.search.substring(1).split("&")[0]);
 

@@ -9,7 +9,6 @@ import axios from "axios";
 function Project() {
     const [slide, setslide] = useState(true)
     const [menu, setmenu] = useState([])
-    
 
     const changeslide = (newslide) => {
         setslide(newslide);

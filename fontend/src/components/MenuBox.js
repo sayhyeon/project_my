@@ -5,7 +5,7 @@ import axios from "axios";
 function MenuBox(props) {
     const [projectinfo, setprojectinfo] = useState([])
 
-    console.log(projectinfo.id)
+    // console.log(projectinfo.id)
     useEffect(() => {
         axios
             .get(`http://192.168.0.205:8000/projectinfo:${props.menu.category}`)
@@ -18,7 +18,7 @@ function MenuBox(props) {
                 // 오류 시 
                 // console.log(error);
             });
-    }, [projectinfo,props.menu.category])
+    }, [props.menu.category])
 
     return (
         <div className="w-1/2 h-1/2 p-5">
