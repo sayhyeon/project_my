@@ -1,16 +1,25 @@
 import MenuBox from "./MenuBox"
 // import { useState, useEffect } from "react";/
-import { Link, useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
-function Main() {
+function Main(props) {
     const location = useLocation();
+    const navigate = useNavigate();
+
+    const handleRowClick = () => {
+        navigate("?project&index1");
+    };
+
 
     if (!location.search) {
         return <div className="h-full w-full flex bg-gray-100">
             <div className="w-4/5 h-full flex flex-col">
                 <div className="h-full w-full flex flex-wrap">
                     {/* 반복문 */}
-                    <MenuBox></MenuBox>
+                    {props.menu.map((menu,index)=>(
+                        <MenuBox key={index} menu={menu}></MenuBox>
+                    ))}
+                    
                 </div>
             </div>
             <div className="flex-1 p-3">
@@ -21,84 +30,84 @@ function Main() {
 
     if (location.search === "?profile") {
         return <div className="w-full h-full flex">
-        <div className="w-1/3 flex flex-col">
-            <div className="h-1/3 flex items-center">
-                <img className="w-24 h-36 m-auto" src="https://dummyimage.com/100x140" alt="login_image"></img>
+            <div className="w-1/3 flex flex-col">
+                <div className="h-1/3 flex items-center">
+                    <img className="w-24 h-36 m-auto" src="https://dummyimage.com/100x140" alt="login_image"></img>
+                </div>
+                <div className="flex-1 flex flex-col">
+                    <div className="h-1/3 p-2">
+                        <p className="font-bold text-sm">기본사항</p>
+                        <div className="mt-1 flex">
+                            <span className="text-xs mr-2">이름</span>
+                            <input className="h-4 text-xs flex-1 p-1 border-2 border-blue-200 rounded whitespace-nowrap  overflow-hidden text-ellipsis" placeholder="ex) 2000.20.20" />
+                        </div>
+                        <div className="mt-1 flex">
+                            <span className="text-xs mr-2">생년</span>
+                            <input className="h-4 text-xs flex-1 p-1 border-2 border-blue-200 rounded whitespace-nowrap  overflow-hidden text-ellipsis" placeholder="ex) 2000.20.20" />
+                        </div>
+                        <div className="mt-1 flex">
+                            <span className="text-xs mr-2">번호</span>
+                            <input className="h-4 text-xs flex-1 p-1 border-2 border-blue-200 rounded whitespace-nowrap  overflow-hidden text-ellipsis" placeholder="ex) 010-0101-0101" />
+                        </div>
+                        <div className="mt-1 flex">
+                            <span className="text-xs mr-2">주소</span>
+                            <input className="h-4 text-xs flex-1 p-1 border-2 border-blue-200 rounded whitespace-nowrap  overflow-hidden text-ellipsis" placeholder="ex) 전라남도 여수시 아파트 200동 2000호" />
+                        </div>
+                        <div className="mt-1 flex">
+                            <span className="text-xs mr-2">메일</span>
+                            <input className="h-4 text-xs flex-1 p-1 border-2 border-blue-200 rounded whitespace-nowrap  overflow-hidden text-ellipsis" placeholder="ex) id@naver.com" />
+                        </div>
+                    </div>
+                    <div className="h-1/3 p-2">
+                        <p className="font-bold text-sm">학력사항</p>
+                        <div className="mt-1 flex">
+                            <input className="h-4 text-xs flex-1 p-1 border-2 border-blue-200 rounded whitespace-nowrap  overflow-hidden text-ellipsis" placeholder="ex) 2000.20.20" />
+                        </div>
+                        <div className="mt-1 flex">
+                            <input className="h-4 text-xs flex-1 p-1 border-2 border-blue-200 rounded whitespace-nowrap  overflow-hidden text-ellipsis" placeholder="ex) 2000.20.20" />
+                        </div>
+                    </div>
+                    <div className="flex-1 p-2">
+                        <p className="font-bold text-sm">자격증</p>
+                        <div className="flex mt-1 w-full">
+                            <p className="text-xs mr-1">2021.06</p>
+                            <p className="text-xs whitespace-nowrap  overflow-hidden text-ellipsis mr-1 w-2/5">사회조사분석사 2급</p>
+                            <p className="text-xs whitespace-nowrap  overflow-hidden text-ellipsis mr-1 text-gray-400">한국산업인력공단</p>
+                        </div>
+                        <div className="flex mt-1 w-full">
+                            <p className="text-xs mr-1">2023.03</p>
+                            <p className="text-xs whitespace-nowrap  overflow-hidden text-ellipsis mr-1 w-2/5">데이터분석준전문가(ADsP)</p>
+                            <p className="text-xs whitespace-nowrap  overflow-hidden text-ellipsis mr-1 text-gray-400">한국데이터베이스진흥원</p>
+                        </div>
+                        <div className="flex mt-1 w-full">
+                            <p className="text-xs mr-1">2024.06</p>
+                            <p className="text-xs whitespace-nowrap  overflow-hidden text-ellipsis mr-1 w-2/5">정보처리기사</p>
+                            <p className="text-xs whitespace-nowrap  overflow-hidden text-ellipsis mr-1 text-gray-400">한국산업인력공단</p>
+                        </div>
+                        <div className="flex mt-1 w-full">
+                            <p className="text-xs mr-1">2024.07</p>
+                            <p className="text-xs whitespace-nowrap  overflow-hidden text-ellipsis mr-1 w-2/5">빅데이터분석기사</p>
+                            <p className="text-xs whitespace-nowrap  overflow-hidden text-ellipsis mr-1 text-gray-400">한국데이터베이스진흥원</p>
+                        </div>
+                    </div>
+
+                </div>
             </div>
             <div className="flex-1 flex flex-col">
-                <div className="h-1/3 p-2">
-                    <p className="font-bold text-sm">기본사항</p>
-                    <div className="mt-1 flex">
-                        <span className="text-xs mr-2">이름</span>
-                        <input className="h-4 text-xs flex-1 p-1 border-2 border-blue-200 rounded whitespace-nowrap  overflow-hidden text-ellipsis" placeholder="ex) 2000.20.20" />
-                    </div>
-                    <div className="mt-1 flex">
-                        <span className="text-xs mr-2">생년</span>
-                        <input className="h-4 text-xs flex-1 p-1 border-2 border-blue-200 rounded whitespace-nowrap  overflow-hidden text-ellipsis" placeholder="ex) 2000.20.20" />
-                    </div>
-                    <div className="mt-1 flex">
-                        <span className="text-xs mr-2">번호</span>
-                        <input className="h-4 text-xs flex-1 p-1 border-2 border-blue-200 rounded whitespace-nowrap  overflow-hidden text-ellipsis" placeholder="ex) 010-0101-0101" />
-                    </div>
-                    <div className="mt-1 flex">
-                        <span className="text-xs mr-2">주소</span>
-                        <input className="h-4 text-xs flex-1 p-1 border-2 border-blue-200 rounded whitespace-nowrap  overflow-hidden text-ellipsis" placeholder="ex) 전라남도 여수시 아파트 200동 2000호" />
-                    </div>
-                    <div className="mt-1 flex">
-                        <span className="text-xs mr-2">메일</span>
-                        <input className="h-4 text-xs flex-1 p-1 border-2 border-blue-200 rounded whitespace-nowrap  overflow-hidden text-ellipsis" placeholder="ex) id@naver.com" />
-                    </div>
+                <div className="h-1/3 w-full p-3 flex flex-col">
+                    <p className="font-bold text-sm p-3 bg-blue-200">자서소1</p>
+                    <input className="flex-1 p-3 border-2"></input>
                 </div>
-                <div className="h-1/3 p-2">
-                    <p className="font-bold text-sm">학력사항</p>
-                    <div className="mt-1 flex">
-                        <input className="h-4 text-xs flex-1 p-1 border-2 border-blue-200 rounded whitespace-nowrap  overflow-hidden text-ellipsis" placeholder="ex) 2000.20.20" />
-                    </div>
-                    <div className="mt-1 flex">
-                        <input className="h-4 text-xs flex-1 p-1 border-2 border-blue-200 rounded whitespace-nowrap  overflow-hidden text-ellipsis" placeholder="ex) 2000.20.20" />
-                    </div>
+                <div className="h-1/3 w-full p-3 flex flex-col">
+                    <p className="font-bold text-sm p-3 bg-blue-200">자서소2</p>
+                    <input className="flex-1 p-3 border-2"></input>
                 </div>
-                <div className="flex-1 p-2">
-                    <p className="font-bold text-sm">자격증</p>
-                    <div className="flex mt-1 w-full">
-                        <p className="text-xs mr-1">2021.06</p>
-                        <p className="text-xs whitespace-nowrap  overflow-hidden text-ellipsis mr-1 w-2/5">사회조사분석사 2급</p>
-                        <p className="text-xs whitespace-nowrap  overflow-hidden text-ellipsis mr-1 text-gray-400">한국산업인력공단</p>
-                    </div>
-                    <div className="flex mt-1 w-full">
-                        <p className="text-xs mr-1">2023.03</p>
-                        <p className="text-xs whitespace-nowrap  overflow-hidden text-ellipsis mr-1 w-2/5">데이터분석준전문가(ADsP)</p>
-                        <p className="text-xs whitespace-nowrap  overflow-hidden text-ellipsis mr-1 text-gray-400">한국데이터베이스진흥원</p>
-                    </div>
-                    <div className="flex mt-1 w-full">
-                        <p className="text-xs mr-1">2024.06</p>
-                        <p className="text-xs whitespace-nowrap  overflow-hidden text-ellipsis mr-1 w-2/5">정보처리기사</p>
-                        <p className="text-xs whitespace-nowrap  overflow-hidden text-ellipsis mr-1 text-gray-400">한국산업인력공단</p>
-                    </div>
-                    <div className="flex mt-1 w-full">
-                        <p className="text-xs mr-1">2024.07</p>
-                        <p className="text-xs whitespace-nowrap  overflow-hidden text-ellipsis mr-1 w-2/5">빅데이터분석기사</p>
-                        <p className="text-xs whitespace-nowrap  overflow-hidden text-ellipsis mr-1 text-gray-400">한국데이터베이스진흥원</p>
-                    </div>
+                <div className="h-1/3 w-full p-3 flex flex-col">
+                    <p className="font-bold text-sm p-3 bg-blue-200">자서소3</p>
+                    <input className="flex-1 p-3 border-2"></input>
                 </div>
-
             </div>
         </div>
-        <div className="flex-1 flex flex-col">
-            <div className="h-1/3 w-full p-3 flex flex-col">
-                <p className="font-bold text-sm p-3 bg-blue-200">자서소1</p>
-                <input className="flex-1 p-3 border-2"></input>
-            </div>
-            <div className="h-1/3 w-full p-3 flex flex-col">
-                <p className="font-bold text-sm p-3 bg-blue-200">자서소2</p>
-                <input className="flex-1 p-3 border-2"></input>
-            </div>
-            <div className="h-1/3 w-full p-3 flex flex-col">
-                <p className="font-bold text-sm p-3 bg-blue-200">자서소3</p>
-                <input className="flex-1 p-3 border-2"></input>
-            </div>
-        </div>
-    </div>
     }
 
     return (
@@ -127,14 +136,13 @@ function Main() {
                         </tr>
                     </thead>
                     <tbody className="block bg-slate-50 h-full">
-                        <Link to="?project&index1">
-                            <tr className="h-12 text-base text-slate-500 font-normal table w-full text-center border-b cursor-pointer hover:bg-slate-200 hover:border-l-4 hover:border-l-blue-400">
+                        <tr className="h-12 text-base text-slate-500 font-normal table w-full text-center border-b cursor-pointer hover:bg-slate-200 hover:border-l-4 hover:border-l-blue-400" onClick={handleRowClick}>
                                 <td className="w-16 border-r">1</td>
                                 <td className="text-left p-3 border-r text-black font-bold whitespace-nowrap  overflow-hidden text-ellipsis">테스트</td>
                                 <td className="w-16 border-r del_400px">table</td>
                                 <td className="w-28 del_400px">t</td>
-                            </tr>
-                        </Link>
+                        </tr>
+
                     </tbody>
                 </table>
             </div>
@@ -144,7 +152,7 @@ function Main() {
                         <li>
                             <button className="h-10 px-5 text-blue-600 transition-colors duration-150 rounded-l-lg focus:shadow-outline hover:bg-blue-100">
                                 <svg className="w-4 h-4 fill-current" viewBox="0 0 20 20">
-                                    <path d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" fill-rule="evenodd"></path>
+                                    <path d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd" fillRule="evenodd"></path>
                                 </svg>
                             </button>
                         </li>
@@ -160,7 +168,7 @@ function Main() {
                         <li>
                             <button className="h-10 px-5 text-blue-600 transition-colors duration-150 bg-white rounded-r-lg focus:shadow-outline hover:bg-blue-100">
                                 <svg className="w-4 h-4 fill-current" viewBox="0 0 20 20">
-                                    <path d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" fill-rule="evenodd"></path>
+                                    <path d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" fillRule="evenodd"></path>
                                 </svg>
                             </button>
                         </li>
