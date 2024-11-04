@@ -38,3 +38,11 @@ class ListProjectimg(generics.ListCreateAPIView):
 class DetailProjectimg(generics.RetrieveUpdateDestroyAPIView):
     queryset = Projectimg.objects.all()
     serializer_class = ProjectimgSerializer
+
+class CategoryProjectimg(generics.ListCreateAPIView):
+    serializer_class = ProjectimgSerializer
+
+    def get_queryset(self):
+        # URL에서 카테고리 값을 가져와서 필터링
+        name = self.kwargs['name']
+        return Projectimg.objects.filter(name__name=name)

@@ -2,7 +2,7 @@ import Menu from "../components/Menu"
 import Head from "../components/Head";
 import Main from "../components/Main"
 import { useState, useEffect } from "react";
-import axios from "axios";
+import fetchData, { API_ENDPOINTS } from "../API/Api";
 
 
 
@@ -15,18 +15,18 @@ function Project() {
     }
 
     useEffect(() => {
-        axios
-            .get("http://192.168.0.205:8000/")
-            .then((response) => {
-                setmenu([...response.data]);
-                // 정상 가동
-                // console.log(response.data);
-            })
-            .catch(function (error) {
-		            // 오류 시 
-                // console.log(error);
-            });
-    }, [menu])
+        const loadData = async () => {
+            try {
+                const data = await fetchData(API_ENDPOINTS.menu);
+                setmenu([...data]);
+                // console.log(data);
+            } catch (error) {
+                // 오류 처리
+            }
+        };
+
+        loadData();
+    }, []);
 
     return (
         <div className="w-full h-screen flex">

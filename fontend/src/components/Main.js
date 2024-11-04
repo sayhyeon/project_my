@@ -1,13 +1,8 @@
 import MenuBox from "./MenuBox"
 import { useLocation, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import axios from "axios";
-
-const images = [
-    'https://dummyimage.com/100x100',
-    'https://dummyimage.com/100x100',
-    'https://dummyimage.com/100x100',
-];
+import fetchData, {API_ENDPOINTS} from "../API/Api";
+import Slide from "./Slide";
 
 function Main(props) {
     const location = useLocation();
@@ -22,32 +17,35 @@ function Main(props) {
 
     useEffect(() => {
         if (location.search.substring(1).split("&")[0]) {
-            axios
-                .get(`http://192.168.0.205:8000/projectinfo:${location.search.substring(1).split("&")[0]}`)
-                .then((response) => {
-                    setprojectinfo([...response.data]);
-                    // 정상 가동
-                    // console.log(response.data);
-                })
-                .catch(function (error) {
-                    // 오류 시 
-                    // console.log(error);
-                });
+
+            const loadData_projectinfo = async () => {
+                try {
+                    const data = await fetchData(API_ENDPOINTS.projectinfo, location.search.substring(1).split("&")[0]);
+                    setprojectinfo([...data]);
+                    // console.log(data);
+                } catch (error) {
+                    // 오류 처리
+                }
+            };
+
+            loadData_projectinfo();
 
             if (location.search.split("&")[1]) {
-                // console.log(location.search.split("=")[1]);
-                axios
-                    .get(`http://192.168.0.205:8000/projectinfo:${location.search.split("=")[1]}`)
-                    .then((response) => {
-                        // console.log(response.data);
-                        if (response.data) {
-                            setprojectinfo2([response.data]);
-                        }
-                    })
-                    .catch(function (error) {
-                        // 오류 시 
+
+                const loadData_projectinfo2 = async () => {
+                    try {
+                        const data = await fetchData(API_ENDPOINTS.projectinfo, location.search.split("=")[1]);
+                        setprojectinfo2([data]);
+                        // console.log(data);
+                        // console.log(location.search.split("=")[1]);
+                    } catch (error) {
+                        // 오류 처리
                         console.log(error);
-                    });
+                    }
+                };
+
+                loadData_projectinfo2();
+
             }
         }
 
@@ -239,7 +237,7 @@ function Main(props) {
                     </div>
                     <div className="flex-1 flex flex-col">
                         <div className="flex-1">
-
+                            <Slide projectinfo2={projectinfo2}></Slide>
                         </div>
                         <div className="h-20 flex items-center justify-center">
                             <button className="text-xl font-bold text-white bg-blue-600 rounded-lg w-40 h-12 hover:bg-blue-300 hover:border-black hover:border-2">시작하기</button>

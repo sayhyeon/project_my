@@ -10,4 +10,5 @@ urlpatterns = [
     path('projectinfo:<str:category>/', views.CategoryProjectinfo.as_view()),
     path('projectimg', views.ListProjectimg.as_view()),
     path('projectimg:<int:pk>/', views.DetailProjectimg.as_view()),
+    path('projectimg:<str:name>/', views.CategoryProjectimg.as_view()),
 ]
