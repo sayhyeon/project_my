@@ -27,7 +27,7 @@ class Projectinfo(models.Model):
 
 class Projectimg(models.Model):
     id = models.AutoField(primary_key=True)
-    name = models.ForeignKey(Projectinfo, on_delete=models.CASCADE)
+    projectinfo = models.ForeignKey(Projectinfo, on_delete=models.CASCADE)
     img_title = models.CharField(max_length = 100)
     img1 = models.CharField(max_length = 100, null=True)
     img2 = models.CharField(max_length = 100, null=True)

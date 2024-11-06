@@ -29,7 +29,7 @@ class ProjectimgSerializer(serializers.ModelSerializer):
     class Meta:
         fields = (
             'id',
-            'name',
+            'projectinfo',
             'img_title',
             'img1',
             'img2',

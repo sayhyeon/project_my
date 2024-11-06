@@ -1,10 +1,18 @@
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 // import axios from "axios";
 import fetchData, { API_ENDPOINTS } from "../API/Api";
 
 function MenuBox(props) {
     const [projectinfo, setprojectinfo] = useState([])
+    const navigate = useNavigate();
+
+    const handleRowClick = (index) => {
+        navigate(`?${props.menu.category}&page=1&index=${index}`);
+        // `?${props.menu.category}&index=${projectinfo.id}`
+        window.location.reload();
+    };
 
     // console.log(projectinfo.id)
     useEffect(() => {
@@ -30,11 +38,11 @@ function MenuBox(props) {
                         <p>more</p>
                     </Link>
                 </div>
-                <div className="flex-1 bg-white text-xs font-normal overflow-y-scroll">
+                <div className="flex-1 bg-white text-xs font-normal">
                     {/* 반복문 */}
-                    {projectinfo.map((projectinfo, index) => (
-                        <Link key={index} to={`?${props.menu.category}&index=${projectinfo.id}`}>
-                            <div className="w-full h-8 hover:text-blue-500 hover:bg-slate-100 border-b flex justify-bewteen">
+                    {projectinfo.slice(0, 10).map((projectinfo, index) => (
+                        // <Link key={index} to={`?${props.menu.category}&index=${projectinfo.id}`}>
+                            <div key={index} onClick={() => handleRowClick(projectinfo.id)} className="w-full h-8 hover:text-blue-500 hover:bg-slate-100 border-b flex justify-bewteen">
                                 <div className="w-10 h-full px-3 py-2 text-center border-r">
                                     <p className="bg_color1 w-4 h-4">{index + 1}</p>
                                 </div>
@@ -45,7 +53,7 @@ function MenuBox(props) {
                                     <p className="">{projectinfo.day}</p>
                                 </div>
                             </div>
-                        </Link>
+                        // </Link>
                     ))}
                 </div>
 

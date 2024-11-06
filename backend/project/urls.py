@@ -9,6 +9,6 @@ urlpatterns = [
     path('projectinfo:<int:pk>/', views.DetailProjectinfo.as_view()),
     path('projectinfo:<str:category>/', views.CategoryProjectinfo.as_view()),
     path('projectimg', views.ListProjectimg.as_view()),
-    path('projectimg:<int:pk>/', views.DetailProjectimg.as_view()),
-    path('projectimg:<str:name>/', views.CategoryProjectimg.as_view()),
+    path('projectimg/<int:pk>/', views.DetailProjectimg.as_view()),
+    path('projectimg:<int:projectinfo>/', views.CategoryProjectimg.as_view()),
 ]

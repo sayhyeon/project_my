@@ -1,19 +1,78 @@
 import MenuBox from "./MenuBox"
 import { useLocation, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import fetchData, {API_ENDPOINTS} from "../API/Api";
+import fetchData, { API_ENDPOINTS } from "../API/Api";
 import Slide from "./Slide";
+import Swal from 'sweetalert2'
 
 function Main(props) {
     const location = useLocation();
     const navigate = useNavigate();
     const [projectinfo, setprojectinfo] = useState([])
     const [projectinfo2, setprojectinfo2] = useState([])
+    const [viewset, setviewset] = useState(true)
+    const [page, setpage] = useState()
+    const [search, setsearch] = useState()
+    const [currentpage, setcurrentpage] = useState(1)
+    const view_page = Array(3).fill(null);
+
+    const searchClick = () => {
+        // console.log(search)
+        if (search){
+            // Swal.fire(search);
+            Swal.fire({
+                title: search,
+                text: "검색 결과 n개",
+                icon: "success",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "초기화"
+              }).then((result) => {
+                if (result.isConfirmed) {
+                  Swal.fire({
+                    title: "초기화",
+                    text: "초기화 완료.",
+                    icon: "success"
+                  });
+                  setsearch('');
+                }
+              });
+        }
+        else {
+            Swal.fire("검색어를 입력하시오.");
+        }
+        
+
+    }
 
     const handleRowClick = (index) => {
-        navigate(`?${location.search.substring(1).split("&")[0]}&index=${index}`);
+        navigate(`?${location.search.substring(1).split("&")[0]}&page=${currentpage}&index=${index}`);
+        window.location.reload();
     };
 
+    const startProject = () => {
+        Swal.fire("아직 없다");
+    };
+
+    const nextPage = () => {
+
+        if (currentpage === page || page === 1) {
+            Swal.fire("마지막 페이지입니다");
+        }
+        else (
+            setcurrentpage(currentpage + 1)
+        )
+    };
+
+    const prePage = () => {
+        if (currentpage === 1) {
+            Swal.fire("첫 페이지입니다");
+        }
+        else (
+            setcurrentpage(currentpage - 1)
+        )
+    };
 
     useEffect(() => {
         if (location.search.substring(1).split("&")[0]) {
@@ -30,11 +89,11 @@ function Main(props) {
 
             loadData_projectinfo();
 
-            if (location.search.split("&")[1]) {
+            if (location.search.split("&")[2]) {
 
                 const loadData_projectinfo2 = async () => {
                     try {
-                        const data = await fetchData(API_ENDPOINTS.projectinfo, location.search.split("=")[1]);
+                        const data = await fetchData(API_ENDPOINTS.projectinfo, location.search.split("=")[2]);
                         setprojectinfo2([data]);
                         // console.log(data);
                         // console.log(location.search.split("=")[1]);
@@ -50,6 +109,20 @@ function Main(props) {
         }
 
     }, [location])
+
+
+    useEffect(() => {
+        if (viewset){
+            setpage(Math.ceil(projectinfo.length / 10))
+        }
+        else {
+            setpage(Math.ceil(projectinfo.length / 3))
+        }
+
+        setcurrentpage(1)
+    }, [projectinfo,viewset])
+
+    // console.log(page)
 
     if (!location.search) {
         return <div className="h-full w-full flex bg-gray-100">
@@ -69,11 +142,11 @@ function Main(props) {
     }
 
     // console.log(location.search.split("&")[1])
-    // console.log(projectinfo2)
+
 
 
     if (location.search.split("?")[1]) {
-        if (location.search === "?profile") {
+        if (location.search === "?profile&page=1") {
             return (
                 <div className="w-full h-full flex">
                     <div className="w-1/3 flex flex-col">
@@ -157,56 +230,103 @@ function Main(props) {
             )
         }
 
-        if (!location.search.split("&")[1]) {
+        // console.log(projectinfo2)
+        if (location.search.split("&")[1]) {
+            if (location.search.split("=")[2]) {
+                return (
+                    <div className="w-full h-full p-3 flex flex-col">
+                        <div className="text-base font-medium h-12 px-1 py-3">
+                            {projectinfo2[0] && projectinfo2[0].name && (
+                                <p>{projectinfo2[0].name}</p>
+                            )}
+                        </div>
+                        <div className="flex-1 flex flex-col">
+                            <div className="flex-1">
+                                <Slide projectinfo2={projectinfo2}></Slide>
+                            </div>
+                            <div className="h-20 flex items-center justify-center">
+                                <button onClick={startProject} className="text-xl font-bold text-white bg-blue-600 rounded-lg w-40 h-12 hover:bg-blue-300 hover:border-black hover:border-2">시작하기</button>
+                            </div>
+                        </div>
+                    </div>
+                )
+            }
             return (
                 <div className="w-full h-full flex flex-col bg-gray-100">
                     <div className="h-20 flex justify-between">
                         <div className="w-1/4 flex items-center p-3">
-                            <input className="w-4/5 h-8 border-blue-500 border-2 rounded-l-lg p-3"></input>
-                            <button className="w-1/5 h-8">
-                                <p className="w-full h-full rounded-r-lg bg-blue-500 text-center pt-1 text-white">검색</p>
+                            <input className="w-4/5 h-8 border-blue-500 border-2 rounded-l-lg p-3" onChange={(event)=>setsearch(event.target.value)} value={search}></input>
+                            <button onClick={searchClick} className="w-1/5 h-8">
+                                <p className="w-full h-full rounded-r-lg bg-blue-500 text-center pt-1 text-white" >검색</p>
                             </button>
                         </div>
                         <div className="flex items-center p-3">
                             <button>
-                                <img className="w-10 h-10" src="https://dummyimage.com/40x40" alt="login_image" />
+                                <img onClick={() => setviewset(!viewset)} className="w-10 h-10" src="https://dummyimage.com/40x40" alt="login_image" />
                             </button>
                         </div>
                     </div>
                     <div className="flex-1 p-3">
-                        <table className="w-full h-full border-collapse ">
-                            <thead className="bg-white">
-                                <tr className="h-12 text-sm font-bold table w-full border-t-2 border-y border-black border-solid">
-                                    <th className="w-16">순번</th>
-                                    <th className="">제목</th>
-                                    <th className="w-16 del_400px">조회</th>
-                                    <th className="w-28 del_400px">날짜</th>
-                                </tr>
-                            </thead>
-                            <tbody className="block bg-slate-50 h-full">
-                                {/* 반복문 */}
-                                {projectinfo.map((projectinfo, index) => (
-                                    <tr key={index} className="h-12 text-base text-slate-500 font-normal table w-full text-center border-b cursor-pointer hover:bg-slate-200 hover:border-l-4 hover:border-l-blue-400" onClick={() => handleRowClick(projectinfo.id)}>
-                                        <td className="w-16 border-r">{index + 1}</td>
-                                        <td className="text-left p-3 border-r text-black font-bold whitespace-nowrap  overflow-hidden text-ellipsis">{projectinfo.name}</td>
-                                        <td className="w-16 border-r del_400px">{projectinfo.viewcount}</td>
-                                        <td className="w-28 del_400px">{projectinfo.day}</td>
+                        {viewset ? (
+                            <table className="w-full h-full border-collapse ">
+                                <thead className="bg-white">
+                                    <tr className="h-12 text-sm font-bold table w-full border-t-2 border-y border-black border-solid">
+                                        <th className="w-16">순번</th>
+                                        <th className="">제목</th>
+                                        <th className="w-16 del_400px">조회</th>
+                                        <th className="w-28 del_400px">날짜</th>
                                     </tr>
+                                </thead>
+                                <tbody className="block bg-slate-50 h-full">
+                                    {/* 반복문 */}
+
+                                    {projectinfo.slice(0 + ((currentpage - 1) * 10), 10 + ((currentpage - 1) * 10)).map((projectinfo, index) => (
+                                        <tr key={index} className="h-12 text-base text-slate-500 font-normal table w-full text-center border-b cursor-pointer hover:bg-slate-200 hover:border-l-4 hover:border-l-blue-400" onClick={() => handleRowClick(projectinfo.id)}>
+                                            <td className="w-16 border-r">{index + 1}</td>
+                                            <td className="text-left p-3 border-r text-black font-bold whitespace-nowrap  overflow-hidden text-ellipsis">{projectinfo.name}</td>
+                                            <td className="w-16 border-r del_400px">{projectinfo.viewcount}</td>
+                                            <td className="w-28 del_400px">{projectinfo.day}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        ) : (
+                            <div className="w-full h-full flex">
+                                {projectinfo.slice(0 + ((currentpage - 1) * 3), 3 + ((currentpage - 1) * 3)).map((projectinfo, index) => (
+                                    <div className="w-1/3 h-full p-3">
+                                        <div class="flex flex-col h-full shadow-xl" onClick={() => handleRowClick(projectinfo.id)}>
+                                            <div class="h-4/6 flex bg-blue-100">
+                                                <div class="aspect-square h-4/6 m-auto margin_550px width100_550px height100_550px">
+                                                    <img class="w-full h-full" src="https://dummyimage.com/180x180" alt="image_test" />
+                                                </div>
+                                            </div>
+                                            <div class="h-2/6 bg-slate-100 flex items-center m-auto"><p>{projectinfo.name}</p></div>
+                                        </div>
+                                    </div>
                                 ))}
-                            </tbody>
-                        </table>
+
+                            </div>
+                        )}
+
                     </div>
                     <div className="p-4 flex items-center flex-wrap justify-center del_400px">
                         <nav aria-label="Page navigation">
                             <ul className="inline-flex">
                                 <li>
-                                    <button className="h-10 px-5 text-blue-600 transition-colors duration-150 rounded-l-lg focus:shadow-outline hover:bg-blue-100">
+                                    <button onClick={prePage} className="h-10 px-5 text-blue-600 transition-colors duration-150 rounded-l-lg focus:shadow-outline hover:bg-blue-100">
                                         <svg className="w-4 h-4 fill-current" viewBox="0 0 20 20">
                                             <path d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd" fillRule="evenodd"></path>
                                         </svg>
                                     </button>
                                 </li>
-                                <li>
+                                {view_page.map((_, index) => {
+                                    return (
+                                        <li key={index} onClick={() => setcurrentpage(page === 1 ? 1 : index + 1)}>
+                                            <button className={`h-10 px-5 text-blue-600 transition-colors duration-150 focus:shadow-outline hover:bg-blue-100  ${currentpage < 3 ? currentpage === index + 1 ? "bg-blue-600 text-white" : "" : currentpage === index + currentpage - 1 ? "bg-blue-600 text-white" : ""}`}>{currentpage < 3 ? index + 1 : index + currentpage - 1}</button>
+                                        </li>
+                                    )
+                                })}
+                                {/* <li>
                                     <button className="h-10 px-5 text-blue-600 transition-colors duration-150 focus:shadow-outline hover:bg-blue-100">1</button>
                                 </li>
                                 <li>
@@ -214,9 +334,9 @@ function Main(props) {
                                 </li>
                                 <li>
                                     <button className="h-10 px-5 text-blue-600 transition-colors duration-150 focus:shadow-outline hover:bg-blue-100">3</button>
-                                </li>
+                                </li> */}
                                 <li>
-                                    <button className="h-10 px-5 text-blue-600 transition-colors duration-150 bg-white rounded-r-lg focus:shadow-outline hover:bg-blue-100">
+                                    <button onClick={nextPage} className="h-10 px-5 text-blue-600 transition-colors duration-150 bg-white rounded-r-lg focus:shadow-outline hover:bg-blue-100">
                                         <svg className="w-4 h-4 fill-current" viewBox="0 0 20 20">
                                             <path d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" fillRule="evenodd"></path>
                                         </svg>
@@ -229,23 +349,23 @@ function Main(props) {
             )
         }
 
-        if (projectinfo2.length > 0) {
-            return (
-                <div className="w-full h-full p-3 flex flex-col">
-                    <div className="text-base font-medium h-12 px-1 py-3">
-                        <p>{projectinfo2[0].name}</p>
-                    </div>
-                    <div className="flex-1 flex flex-col">
-                        <div className="flex-1">
-                            <Slide projectinfo2={projectinfo2}></Slide>
-                        </div>
-                        <div className="h-20 flex items-center justify-center">
-                            <button className="text-xl font-bold text-white bg-blue-600 rounded-lg w-40 h-12 hover:bg-blue-300 hover:border-black hover:border-2">시작하기</button>
-                        </div>
-                    </div>
-                </div>
-            )
-        }
+        // if (projectinfo2.length > 0) {
+        //     return (
+        //         <div className="w-full h-full p-3 flex flex-col">
+        //             <div className="text-base font-medium h-12 px-1 py-3">
+        //                 <p>{projectinfo2[0].name}</p>
+        //             </div>
+        //             <div className="flex-1 flex flex-col">
+        //                 <div className="flex-1">
+        //                     <Slide projectinfo2={projectinfo2}></Slide>
+        //                 </div>
+        //                 <div className="h-20 flex items-center justify-center">
+        //                     <button onClick={startProject} className="text-xl font-bold text-white bg-blue-600 rounded-lg w-40 h-12 hover:bg-blue-300 hover:border-black hover:border-2">시작하기</button>
+        //                 </div>
+        //             </div>
+        //         </div>
+        //     )
+        // }
 
 
     }
