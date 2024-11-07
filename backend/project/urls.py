@@ -8,7 +8,9 @@ urlpatterns = [
     path('projectinfo', views.ListProjectinfo.as_view()),
     path('projectinfo:<int:pk>/', views.DetailProjectinfo.as_view()),
     path('projectinfo:<str:category>/', views.CategoryProjectinfo.as_view()),
-    path('projectimg', views.ListProjectimg.as_view()),
-    path('projectimg/<int:pk>/', views.DetailProjectimg.as_view()),
-    path('projectimg:<int:projectinfo>/', views.CategoryProjectimg.as_view()),
+    path('slideimg', views.ListSlideimg.as_view()),
+    # path('projectimg/<int:pk>/', views.DetailSlideimg.as_view()),
+    path('slideimg:<int:projectinfo>/', views.CategorySlideimg.as_view()),
+    path('searchtitle', views.ListSearchtitle.as_view()),
+    path('searchtitle:<str:category>/', views.CategorySearchtitle.as_view()),
 ]

@@ -1,7 +1,8 @@
 from rest_framework import serializers
 from .models import Menu
 from .models import Projectinfo
-from .models import Projectimg
+from .models import Slideimg
+from .models import Searchtitle
 
 class MenuSerializer(serializers.ModelSerializer):
     class Meta:
@@ -21,20 +22,25 @@ class ProjectinfoSerializer(serializers.ModelSerializer):
             'viewcount',
             'day',
             'file_url',
+            'img_title',
 
         )
         model = Projectinfo
 
-class ProjectimgSerializer(serializers.ModelSerializer):
+class SlideimgSerializer(serializers.ModelSerializer):
     class Meta:
         fields = (
             'id',
             'projectinfo',
-            'img_title',
-            'img1',
-            'img2',
-            'img3',
-            'img4',
-            'img5',
+            'slide_img',
         )
-        model = Projectimg
+        model = Slideimg
+
+class SearchtitleSerializer(serializers.ModelSerializer):
+    class Meta:
+        fields = (
+            'id',
+            'category',
+            'search',
+        )
+        model = Searchtitle

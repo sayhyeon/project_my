@@ -1,117 +1,104 @@
 import React, { useState, useEffect } from 'react';
-import fetchData, { API_ENDPOINTS } from "../API/Api";
+import { API_ENDPOINTS } from "../API/Api";
 import { fetchImg } from '../API/Api';
 import Swal from 'sweetalert2'
 
 function Slide(props) {
-
     // console.log(props.projectinfo2[0].name)
-
-
     const [projectimg, setprojectimg] = useState([])
-    const [projectimg2, setprojectimg2] = useState([])
     const [currentSlide, setCurrentSlide] = useState(0);
+
+    // 순서가 뒤죽박죽 되서 아래로 수정
+    // useEffect(() => {
+    //     const loadData_projectimg = async () => {
+    //         const imageUrls = [];
+
+    //         try {
+    //             // 각 이미지 필드에 대해 비동기적으로 이미지 URL을 가져옴
+                
+    //             if (props.projectinfo2[0]) {
+    //                 // reduce를 사용하여 순차적으로 이미지를 처리
+    //                 const imgPromises = props.projectinfo2[0].map(async (field) => {
+    //                     // console.log(field)
+    //                     if (field.slide_img) {
+    //                         // console.log(field)
+    //                         const img = await fetchImg(API_ENDPOINTS.mediaimg, field.slide_img);
+    //                         const imgUrl = URL.createObjectURL(img);
+    //                         imageUrls.push(imgUrl); // 이미지 URL을 배열에 추가
+    //                     }
+    //                 });
+    //                 // 모든 이미지 URL을 병렬로 받아오기
+    //                 await Promise.all(imgPromises);
+    //             }
+    //             // 이미지 URL 리스트를 상태로 업데이트
+    //             setprojectimg([...imageUrls]);
+                
+    //         } catch (error) {
+    //             // 오류 처리
+    //             console.error(error);
+    //         }
+
+    //     };
+
+    //     loadData_projectimg();
+    //     // console.log(projectimg2)
+    // }, [props.projectinfo2])
 
     useEffect(() => {
         const loadData_projectimg = async () => {
-            try {
-                // console.log(props.projectinfo2[0])
-                if (props.projectinfo2[0] && props.projectinfo2[0].id){
-                    const data = await fetchData(API_ENDPOINTS.projectimg, props.projectinfo2[0].id);
-                    setprojectimg(data[0]);
-                }
-
-                // console.log(data[0].img1);
-                // console.log(location.search.split("=")[1]);
-
-            } catch (error) {
-                // 오류 처리
-                console.log(error);
-                // console.log(props.projectinfo2);
-            }
-        };
-
-        loadData_projectimg();
-    }, [props.projectinfo2])
-
-    // console.log(projectimg);
-
-    useEffect(() => {
-        // console.log(projectimg)
-
-        const loadData_projectimg2 = async () => {
-            const imageFields = ['img1', 'img2', 'img3', 'img4', 'img5'];
             const imageUrls = [];
-
-            // if (projectimg.img1) {
-            //     try {
-            //         const img = await fetchImg(API_ENDPOINTS.mediaimg, projectimg.img1);
-            //         const imgUrl = URL.createObjectURL(img);
-            //         setprojectimg2(imgUrl);
-            //         // console.log(location.search.split("=")[1]);
-
-            //     } catch (error) {
-            //         // 오류 처리
-            //         console.log(error);
-            //     }
-            // }
+    
             try {
-                // 각 이미지 필드에 대해 비동기적으로 이미지 URL을 가져옴
-                const imgPromises = imageFields.map(async (field) => {
-                    if (projectimg){
-                        if (projectimg[field]) {
-                            // console.log("1")/
-                            const img = await fetchImg(API_ENDPOINTS.mediaimg, projectimg[field]);
+                // props.projectinfo2[0]이 존재하는지 확인
+                if (props.projectinfo2[0]) {
+                    // reduce를 사용하여 순차적으로 이미지를 처리
+                    await props.projectinfo2[0].reduce(async (promise, field) => {
+                        await promise;
+                        if (field.slide_img) {
+                            const img = await fetchImg(API_ENDPOINTS.mediaimg, field.slide_img);
                             const imgUrl = URL.createObjectURL(img);
-                            imageUrls.push(imgUrl); // 이미지 URL을 배열에 추가
+                            imageUrls.push(imgUrl); // 순차적으로 URL을 배열에 추가
                         }
-                    }
-          
-                });
-
-                // 모든 이미지 URL을 병렬로 받아오기
-                await Promise.all(imgPromises);
-
+                    }, Promise.resolve());
+                }
+    
                 // 이미지 URL 리스트를 상태로 업데이트
-                setprojectimg2(imageUrls);
-
-
+                setprojectimg([...imageUrls]);
+    
             } catch (error) {
-                // 오류 처리
                 console.error(error);
             }
-
-
         };
-
-        loadData_projectimg2();
-        // console.log(projectimg2)
-    }, [projectimg])
+    
+        loadData_projectimg();
+    }, [props.projectinfo2]);
+    
 
     const nextSlide = () => {
-        if (projectimg2.length === 0 && (projectimg2)) {
+        
+        if (projectimg.length === 0 && (projectimg)) {
             Swal.fire("슬라이드 없음");
         }
-        if (currentSlide === projectimg2.length - 1) {
-            setCurrentSlide(projectimg2.length - 1);
+        if (currentSlide === projectimg.length - 1) {
+            setCurrentSlide(projectimg.length - 1);
             Swal.fire("슬라이드 끝");
         }
 
         else {
-            setCurrentSlide((prev) => (prev + 1) % projectimg2.length);
+            setCurrentSlide((prev) => (prev + 1) % projectimg.length);
         }
 
     };
     const preSlide = () => {
-        if (projectimg2.length === 0 && (projectimg2)) {
+        if (projectimg.length === 0 && (projectimg)) {
             Swal.fire("슬라이드 없음");
         }
-        if (currentSlide === 0 && projectimg2.length !== 0) {
+        if (currentSlide === 0 && projectimg.length !== 0) {
             setCurrentSlide(0);
             Swal.fire("슬라이드 시작");
         }
         else {
-            setCurrentSlide((prev) => (prev - 1 + projectimg2.length) % projectimg2.length);
+            setCurrentSlide((prev) => (prev - 1 + projectimg.length) % projectimg.length);
         }
     };
     // const selectmenu = document.getElementById(location.search.substring(1).split("&")[0]);
@@ -122,8 +109,8 @@ function Slide(props) {
                 <p className='w-full'>이전</p>
             </button>
             <div className="flex-1 h-full relative">
-                {(projectimg2.length !== 0) && (projectimg2) &&
-                    <img className="w-full h-full absolute" src={projectimg2[currentSlide]} alt={`slide_image_${currentSlide}`} />
+                {(projectimg.length !== 0) && (projectimg) &&
+                    <img className="w-full h-full absolute" src={projectimg[currentSlide]} alt={`slide_image_${currentSlide}`} />
                 }
 
             </div>

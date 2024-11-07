@@ -72,7 +72,7 @@ function Menu(props) {
           </div>
           {/* 반복문 */}
           {props.menu.map((menu, index) => (
-            <Link key={index} to={`/?${menu.category}&page=1`} >
+            <Link key={index} to={`/?${menu.category}&page=1`}>
               <div className={`h-14 flex ${slide? "px-4 py-2": "p-2"} hover:bg-blue-100 ${(location.search.substring(1).split("&")[0] === menu.category) ? "border-blue-600 bg-blue-100 border-r-4" : ""}`} id={menu.category}>
                 <img className="w-10 h-10" src="https://dummyimage.com/40x40" alt="login_image" />
                 {slide && (
