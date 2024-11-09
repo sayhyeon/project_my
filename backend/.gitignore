@@ -1,0 +1,16 @@
+# Python
+*.pyc
+__pycache__/
+
+# 환경 변수 파일
+.env
+
+# Django migrations
+*/migrations/*.py
+*/migrations/*.pyc
+
+# SQLite database
+db.sqlite3
+
+# log files
+*.log
