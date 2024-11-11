@@ -104,19 +104,6 @@ function Main(props) {
                         Swal.showValidationMessage("서버 오류 발생");
                         return false;  // 오류 발생 시에도 전송을 막음
                     }
-
-                    // try {
-                    //     if (value) {
-                    //         await postValue(API_ENDPOINTS.inputnum, index, value)
-
-                    //         const response = await fetchData(API_ENDPOINTS.inputnum, index);
-                    //         return response[response.length - 1].result;
-                    //     }
-
-
-                    // } catch (error) {
-                    //     // 오류 처리
-                    // }
                 },
                 allowOutsideClick: () => !Swal.isLoading()
             }).then((result) => {
