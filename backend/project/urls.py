@@ -13,4 +13,7 @@ urlpatterns = [
     path('slideimg:<int:projectinfo>/', views.CategorySlideimg.as_view()),
     path('searchtitle', views.ListSearchtitle.as_view()),
     path('searchtitle:<str:category>/', views.CategorySearchtitle.as_view()),
+    path('inputnum', views.ListInputnum.as_view()),
+    path('inputnum:<int:projectinfo>/', views.CategoryInputnum.as_view()),
+
 ]

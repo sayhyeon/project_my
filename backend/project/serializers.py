@@ -3,6 +3,7 @@ from .models import Menu
 from .models import Projectinfo
 from .models import Slideimg
 from .models import Searchtitle
+from .models import Inputnum
 
 class MenuSerializer(serializers.ModelSerializer):
     class Meta:
@@ -44,3 +45,13 @@ class SearchtitleSerializer(serializers.ModelSerializer):
             'search',
         )
         model = Searchtitle
+
+class InputnumSerializer(serializers.ModelSerializer):
+    class Meta:
+        fields = (
+            'id',
+            'projectinfo',
+            'num',
+            'result',
+        )
+        model = Inputnum

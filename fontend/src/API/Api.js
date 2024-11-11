@@ -37,6 +37,24 @@ export const postSearch = async (endpoint, category, search) => {
 
 };
 
+export const postValue = async (endpoint, index, value) => {
+    try {
+        await axios.post(`${BASE_URL}${endpoint}`, {
+            projectinfo: index,  // value 값만 넘기기
+            num: value,  // value 값만 넘기기
+        }, {
+            headers: {
+                'Content-Type': 'application/json',  // 명시적으로 JSON 형식 설정
+            }
+        }
+    );
+
+    } catch (error) {
+        throw error; // 오류를 호출하는 쪽으로 전파
+    }
+
+};
+
 
 // 사용 예시로, 다양한 엔드포인트를 추가할 수 있습니다.
 export const API_ENDPOINTS = {
@@ -44,7 +62,8 @@ export const API_ENDPOINTS = {
     projectinfo: "/projectinfo",
     slideimg: "/slideimg",
     searchtitle: "/searchtitle",
-    mediaimg: "/media/images/"
+    mediaimg: "/media/images/",
+    inputnum: "/inputnum",
     // 추가적인 엔드포인트를 여기에 정의 가능
 };
 

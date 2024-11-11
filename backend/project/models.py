@@ -42,5 +42,14 @@ class Searchtitle(models.Model):
     class Meta:
 	    db_table = 'searchtitle' # db 내부에 테이블 이름 설정
 
+class Inputnum(models.Model):
+    id = models.AutoField(primary_key=True)
+    projectinfo = models.ForeignKey(Projectinfo, on_delete=models.CASCADE)
+    num = models.IntegerField(null=True) ##,null=True
+    result = models.CharField(max_length = 100, null=True)
+
+    class Meta:
+	    db_table = 'inputnum' # db 내부에 테이블 이름 설정
+
 
     

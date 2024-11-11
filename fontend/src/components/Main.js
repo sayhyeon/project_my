@@ -1,7 +1,7 @@
 import MenuBox from "./MenuBox"
 import { useLocation, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import fetchData, { API_ENDPOINTS, postSearch } from "../API/Api";
+import fetchData, { API_ENDPOINTS, postSearch, postValue } from "../API/Api";
 import Slide from "./Slide";
 import Swal from 'sweetalert2'
 
@@ -69,8 +69,70 @@ function Main(props) {
         window.location.reload();
     };
 
-    const startProject = () => {
-        Swal.fire("아직 없다");
+    const startProject = (index) => {
+        console.log(index)
+        if (index === "55") {
+            Swal.fire({
+                title: `회차를 선택 하시오(숫자) <br> 24.11.11 기준 마지막 1145회`,
+                input: "text",
+                inputAttributes: {
+                    autocapitalize: "off"
+                },
+                showCancelButton: true,
+                confirmButtonText: "확인",
+                showLoaderOnConfirm: true,
+                preConfirm: async (value) => {
+                    if (!value) {
+                        // 값이 없으면 메시지 출력하고 전송을 막음
+                        Swal.showValidationMessage("값을 입력하시오");
+                        return false;  // 유효하지 않으면 Promise를 거부
+                    }
+
+                    if(value > 1145 || value <1){
+                        Swal.showValidationMessage("회차 오류");
+                        return false;  // 유효하지 않으면 Promise를 거부
+                    }
+
+                    try {
+                        // 유효한 값일 경우에만 요청
+                        await postValue(API_ENDPOINTS.inputnum, index, value);
+
+                        const response = await fetchData(API_ENDPOINTS.inputnum, index);
+                        return response[response.length - 1].result;  // 마지막 항목의 result 반환
+                    } catch (error) {
+                        // 오류 처리
+                        Swal.showValidationMessage("서버 오류 발생");
+                        return false;  // 오류 발생 시에도 전송을 막음
+                    }
+
+                    // try {
+                    //     if (value) {
+                    //         await postValue(API_ENDPOINTS.inputnum, index, value)
+
+                    //         const response = await fetchData(API_ENDPOINTS.inputnum, index);
+                    //         return response[response.length - 1].result;
+                    //     }
+
+
+                    // } catch (error) {
+                    //     // 오류 처리
+                    // }
+                },
+                allowOutsideClick: () => !Swal.isLoading()
+            }).then((result) => {
+                // console.log(result);
+                if (result.value) {
+                    Swal.fire({
+                        title: result.value,  // result.value에 결과 값이 존재하면 출력
+                    });
+                }
+            });
+        }
+
+        else{
+            Swal.fire("미구현");
+        }
+       
     };
 
     const nextPage = () => {
@@ -115,7 +177,6 @@ function Main(props) {
                     try {
                         const data = await fetchData(API_ENDPOINTS.slideimg, location.search.split("=")[2]);
                         setprojectinfo2([data]);
-                        // console.log(data);
                         // console.log(location.search.split("=")[1]);
                     } catch (error) {
                         // 오류 처리
@@ -158,7 +219,31 @@ function Main(props) {
                 </div>
             </div>
             <div className="flex-1 p-3">
-                <div className="w-full h-full bg-white shadow-xl">미구현</div>
+                <div className="w-full h-full bg-white shadow-xl p-3">
+                    <div className="font-bold">1. 제목</div>
+                    <div className="mb-3 mt-1 ml-2">총 정리</div>
+                    <div className="font-bold">2. 개발툴</div>
+                    <div className="mt-1 ml-2">React (fontend)</div>
+                    <div className="mt-1 ml-2">Django (backend)</div>
+                    <div className="mt-1 ml-2">VisualStudioCode</div>
+                    <div className="mt-1 ml-2">Tailwind css</div>
+                    <div className="mt-1 ml-2">VirtualBox(ubuntu 환경에서 작업)</div>
+                    <div className="mt-1 ml-2">Docker(ubuntu:latest 이미지 사용)</div>
+                    <div className="mt-1 ml-2">Github(관리--비공개)</div>
+                    <div className="mb-3 mt-1 ml-2">postgresql (DB)</div>
+                    <div className="font-bold">3. 카테고리</div>
+                    <div className="mt-1 ml-2">3-1. project</div>
+                    <div className="mt-1 ml-4 mb-3">프로젝트 내용 정리(시작 버튼 미구현)</div>
+                    <div className="mt-1 ml-2">3-1. code</div>
+                    <div className="mt-1 ml-4 mb-3">code 실행</div>
+                    <div className="mt-1 ml-2">3-1. nonamed</div>
+                    <div className="mt-1 ml-4 mb-3">test로 검색 및 페이지 이동 기능 확인</div>
+                    <div className="mt-1 ml-2">3-1. profile</div>
+                    <div className="mt-1 ml-4 mb-3">프로필</div>
+                    <div className="font-bold">4. 배포</div>
+                    <div className="mt-1 ml-2">노트북 로컬 환경에서 배포</div>
+                    <div className="mt-1 ml-2 mb-3">공유기 포트포워딩을 통해 외부로 배포</div>
+                </div>
             </div>
         </div>
     }
@@ -267,7 +352,7 @@ function Main(props) {
                                 <Slide projectinfo2={projectinfo2}></Slide>
                             </div>
                             <div className="h-20 flex items-center justify-center">
-                                <button onClick={startProject} className="text-xl font-bold text-white bg-blue-600 rounded-lg w-40 h-12 hover:bg-blue-300 hover:border-black hover:border-2">시작하기</button>
+                                <button onClick={() => startProject(location.search.split("=")[2])} className="text-xl font-bold text-white bg-blue-600 rounded-lg w-40 h-12 hover:bg-blue-300 hover:border-black hover:border-2">시작하기</button>
                             </div>
                         </div>
                     </div>
