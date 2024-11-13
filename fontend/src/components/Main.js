@@ -206,7 +206,7 @@ function Main(props) {
                 </div>
             </div>
             <div className="flex-1 p-3">
-                <div className="w-full h-full bg-white shadow-xl p-3">
+                <div className="w-full h-full bg-white shadow-xl p-3 text-xs overflow-y-scroll">
                     <div className="font-bold">1. 제목</div>
                     <div className="mb-3 mt-1 ml-2">총 정리</div>
                     <div className="font-bold">2. 개발툴</div>

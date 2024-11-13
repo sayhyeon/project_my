@@ -38,7 +38,7 @@ function MenuBox(props) {
                         <p>more</p>
                     </Link>
                 </div>
-                <div className="flex-1 bg-white text-xs font-normal">
+                <div className="flex-1 bg-white text-xs font-normal overflow-y-scroll">
                     {/* 반복문 */}
                     {projectinfo.slice(0, 10).map((projectinfo, index) => (
                         // <Link key={index} to={`?${props.menu.category}&index=${projectinfo.id}`}>
@@ -46,7 +46,7 @@ function MenuBox(props) {
                                 <div className="w-10 h-full px-3 py-2 text-center border-r">
                                     <p className="bg_color1 w-4 h-4">{index + 1}</p>
                                 </div>
-                                <div className="w-full py-2 px-2 h-full text-left border-r">
+                                <div className="w-full py-2 px-2 h-full text-left border-r overflow-hidden text-ellipsis truncate">
                                     <p className="">{projectinfo.name}</p>
                                 </div>
                                 <div className="w-20 h-full px-2 py-2 text-center border-r">

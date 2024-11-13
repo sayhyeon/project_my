@@ -44,7 +44,7 @@ function Project() {
                     <div className="h-12 w-full">
                         <Head></Head>
                     </div>
-                    <div className="flex-1 w-full p-3">
+                    <div className="flex-1 w-full h-full p-3 overflow-y-scroll">
                         <Main menu={menu}></Main>
                     </div>
                 </div>
